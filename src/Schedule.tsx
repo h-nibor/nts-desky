@@ -27,6 +27,23 @@ type ChannelProps = {
   [x: string]: any; // mop up for ...props
 };
 
+const formatTimeComponent = (timeComponent) => {
+  return timeComponent.toString().padStart(2, '0');
+}
+
+const formatTime = (timestamp) => {
+  const date = new Date(timestamp);
+  const hours = formatTimeComponent(date.getHours());
+  const minutes = formatTimeComponent(date.getMinutes());
+  return `${hours}:${minutes}`;
+}
+
+const BroadcastTimes = ({ broadcast }) => {
+  const startTime = formatTime(broadcast.start_timestamp);
+  const endTime = formatTime(broadcast.end_timestamp);
+  return `${startTime}-${endTime}`;
+}
+
 const Channel = ({ title, now, next }: ChannelProps) => {
   console.log(title, now, typeof title);
   const { broadcast_title: name } = now;
@@ -38,6 +55,9 @@ const Channel = ({ title, now, next }: ChannelProps) => {
       <h1>
         {title}: {renderHTML(name)} ({locationLong})
       </h1>
+      <div>
+        <BroadcastTimes broadcast={now} />
+      </div>
       <img src={media.background_medium} />
       <Player
         src={`https://stream-relay-geo.ntslive.net/stream${
@@ -46,7 +66,11 @@ const Channel = ({ title, now, next }: ChannelProps) => {
       />
       <p>{description}</p>
       <em>
-        Next on {title}: <strong>{renderHTML(next.broadcast_title)}</strong>
+        Next on {title}:{' '}
+        <strong>
+          {renderHTML(next.broadcast_title)}
+        </strong>
+        {' '}(<BroadcastTimes broadcast={next} />)
       </em>
     </div>
   );
