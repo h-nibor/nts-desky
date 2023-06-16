@@ -27,7 +27,7 @@ type ChannelProps = {
   [x: string]: any; // mop up for ...props
 };
 
-const Channel = ({ title, now }: ChannelProps) => {
+const Channel = ({ title, now, next }: ChannelProps) => {
   console.log(title, now, typeof title);
   const { broadcast_title: name } = now;
   const { embeds } = now;
@@ -45,6 +45,9 @@ const Channel = ({ title, now }: ChannelProps) => {
         }?client=NTSWebApp`}
       />
       <p>{description}</p>
+      <em>
+        Next on {title}: <strong>{renderHTML(next.broadcast_title)}</strong>
+      </em>
     </div>
   );
 };
@@ -98,6 +101,7 @@ const Schedule: React.FC = () => {
             <Channel
               title={channelTitle}
               now={channel.now}
+              next={channel.next}
               key={channelTitle}
             />
           );
